@@ -2,7 +2,7 @@ class VigenereCipher:
     def __init__(self):
         pass
 
-    def vigenere_encrypt(self, plain_text, key):
+    def encrypt_text(self, plain_text, key):
         encrypted_text = ""
         key_index = 0
         for char in plain_text:
@@ -17,7 +17,7 @@ class VigenereCipher:
                 encrypted_text += char
         return encrypted_text
 
-    def vigenere_decrypt(self, encrypted_text, key):
+    def decrypt_text(self, encrypted_text, key):
         decrypted_text = ""
         key_index = 0
         for char in encrypted_text:
