@@ -6,7 +6,7 @@ class PlayFairCipher:
         pass
 
     def create_playfair_matrix(self, key):
-        key = key.replace("J", "I")  # Chuyển J thành I trong khóa
+        key = key.replace("J", "I")  
         key = key.upper()
         key_set = set(key)
         alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
@@ -35,17 +35,17 @@ class PlayFairCipher:
         for i in range(0, len(plain_text), 2):
             pair = plain_text[i:i+2]
 
-            if len(pair) == 1:  # Nếu lẻ, thêm 'X'
+            if len(pair) == 1:  
                 pair += "X"
 
             row1, col1 = self.find_letter_coords(matrix, pair[0])
             row2, col2 = self.find_letter_coords(matrix, pair[1])
 
-            if row1 == row2:  # Cùng hàng
+            if row1 == row2:  
                 encrypted_text += matrix[row1][(col1 + 1) % 5] + matrix[row2][(col2 + 1) % 5]
-            elif col1 == col2:  # Cùng cột
+            elif col1 == col2:  # 
                 encrypted_text += matrix[(row1 + 1) % 5][col1] + matrix[(row2 + 1) % 5][col2]
-            else:  # Tạo hình chữ nhật
+            else:  
                 encrypted_text += matrix[row1][col2] + matrix[row2][col1]
 
         return encrypted_text
@@ -61,14 +61,13 @@ class PlayFairCipher:
             row1, col1 = self.find_letter_coords(matrix, pair[0])
             row2, col2 = self.find_letter_coords(matrix, pair[1])
 
-            if row1 == row2:  # Cùng hàng
+            if row1 == row2:  
                 decrypted_text += matrix[row1][(col1 - 1) % 5] + matrix[row2][(col2 - 1) % 5]
-            elif col1 == col2:  # Cùng cột
+            elif col1 == col2:  
                 decrypted_text += matrix[(row1 - 1) % 5][col1] + matrix[(row2 - 1) % 5][col2]
-            else:  # Tạo hình chữ nhật
+            else:  
                 decrypted_text += matrix[row1][col2] + matrix[row2][col1]
 
-        # Loại bỏ ký tự 'X' nếu được thêm vào
         banro = ""
         for i in range(0, len(decrypted_text) - 2, 2):
             if decrypted_text[i] == decrypted_text[i+2]:
