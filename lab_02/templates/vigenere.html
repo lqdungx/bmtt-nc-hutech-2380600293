@@ -18,14 +18,15 @@
             </tr>
             <tr>
                 <td>
-                    <form method="POST" action="vigenere/encrypt">
+                    <form id="vigenere-encrypt-form" method="POST" action="vigenere/encrypt">
                         <div class="mb-3">
                             <label class="form-label">Plain text:</label>
                             <input type="text" class="form-control" name="inputPlainText" placeholder="Input Plain Text" required autofocus>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Key:</label>
-                            <input type="" class="form-control" name="inputKeyPlain" placeholder="Input Key" required>
+                            <input id="vigenere-key-encrypt" type="text" class="form-control" name="inputKeyPlain" placeholder="Input Key (letters only)" required>
+                            <div id="vigenere-encrypt-error" class="text-danger small mt-1" style="display:none"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Encrypt</button>
                     </form>
@@ -38,14 +39,15 @@
             </tr>
             <tr>
                 <td>
-                    <form method="POST" action="vigenere/decrypt">
+                    <form id="vigenere-decrypt-form" method="POST" action="vigenere/decrypt">
                         <div class="mb-3">
                             <label class="form-label">Cipher text:</label>
                             <input type="text" class="form-control" name="inputCipherText" placeholder="Input Cipher Text" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Key:</label>
-                            <input type="" class="form-control" name="inputKeyCipher" placeholder="Input Key" required>
+                            <input id="vigenere-key-decrypt" type="text" class="form-control" name="inputKeyCipher" placeholder="Input Key (letters only)" required>
+                            <div id="vigenere-decrypt-error" class="text-danger small mt-1" style="display:none"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Decrypt</button>
                     </form>
@@ -53,5 +55,37 @@
             </tr>
         </table>
     </div>
+    <script>
+        function validateVigenereKey(value) {
+            if (!value || value.trim() === '') return false;
+            return /^[A-Za-z]+$/.test(value);
+        }
+
+        document.getElementById('vigenere-encrypt-form').addEventListener('submit', function(e){
+            const val = document.getElementById('vigenere-key-encrypt').value;
+            const ok = validateVigenereKey(val);
+            const errEl = document.getElementById('vigenere-encrypt-error');
+            if (!ok) {
+                e.preventDefault();
+                errEl.style.display = 'block';
+                errEl.textContent = 'Key must be non-empty and contain letters only.';
+            } else {
+                errEl.style.display = 'none';
+            }
+        });
+
+        document.getElementById('vigenere-decrypt-form').addEventListener('submit', function(e){
+            const val = document.getElementById('vigenere-key-decrypt').value;
+            const ok = validateVigenereKey(val);
+            const errEl = document.getElementById('vigenere-decrypt-error');
+            if (!ok) {
+                e.preventDefault();
+                errEl.style.display = 'block';
+                errEl.textContent = 'Key must be non-empty and contain letters only.';
+            } else {
+                errEl.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

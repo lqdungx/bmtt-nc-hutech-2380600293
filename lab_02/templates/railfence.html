@@ -18,14 +18,15 @@
             </tr>
             <tr>
                 <td>
-                    <form method="POST" action="railfence/encrypt">
+                    <form id="railfence-encrypt-form" method="POST" action="railfence/encrypt">
                         <div class="mb-3">
                             <label class="form-label">Plain text:</label>
                             <input type="text" class="form-control" name="inputPlainText" placeholder="Input Plain Text" required autofocus>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Key:</label>
-                            <input type="number" class="form-control" name="inputKeyPlain" placeholder="Input Key" required>
+                            <input id="railfence-key-encrypt" type="number" class="form-control" name="inputKeyPlain" placeholder="Input Key (>=2)" required>
+                            <div id="railfence-encrypt-error" class="text-danger small mt-1" style="display:none"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Encrypt</button>
                     </form>
@@ -38,14 +39,15 @@
             </tr>
             <tr>
                 <td>
-                    <form method="POST" action="railfence/decrypt">
+                    <form id="railfence-decrypt-form" method="POST" action="railfence/decrypt">
                         <div class="mb-3">
                             <label class="form-label">Cipher text:</label>
                             <input type="text" class="form-control" name="inputCipherText" placeholder="Input Cipher Text" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Key:</label>
-                            <input type="number" class="form-control" name="inputKeyCipher" placeholder="Input Key" required>
+                            <input id="railfence-key-decrypt" type="number" class="form-control" name="inputKeyCipher" placeholder="Input Key (>=2)" required>
+                            <div id="railfence-decrypt-error" class="text-danger small mt-1" style="display:none"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Decrypt</button>
                     </form>
@@ -53,5 +55,44 @@
             </tr>
         </table>
     </div>
+    <script>
+        function validateRailKey(key, text) {
+            if (text == null) return false;
+            if (key === '' || key === null) return false;
+            const k = Number(key);
+            if (!Number.isInteger(k)) return false;
+            if (k < 2) return false;
+            if (text.length && k >= text.length) return false;
+            return true;
+        }
+
+        document.getElementById('railfence-encrypt-form').addEventListener('submit', function(e){
+            const text = this.querySelector('input[name="inputPlainText"]').value || '';
+            const val = document.getElementById('railfence-key-encrypt').value;
+            const ok = validateRailKey(val, text);
+            const errEl = document.getElementById('railfence-encrypt-error');
+            if (!ok) {
+                e.preventDefault();
+                errEl.style.display = 'block';
+                errEl.textContent = 'Key must be integer >=2 and less than the length of the text.';
+            } else {
+                errEl.style.display = 'none';
+            }
+        });
+
+        document.getElementById('railfence-decrypt-form').addEventListener('submit', function(e){
+            const text = this.querySelector('input[name="inputCipherText"]').value || '';
+            const val = document.getElementById('railfence-key-decrypt').value;
+            const ok = validateRailKey(val, text);
+            const errEl = document.getElementById('railfence-decrypt-error');
+            if (!ok) {
+                e.preventDefault();
+                errEl.style.display = 'block';
+                errEl.textContent = 'Key must be integer >=2 and less than the length of the text.';
+            } else {
+                errEl.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

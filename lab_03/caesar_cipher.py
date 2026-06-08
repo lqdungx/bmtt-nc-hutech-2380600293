@@ -13,9 +13,26 @@ class MyApp(QMainWindow):
 
     def call_api_encrypt(self):
         url = "http://127.0.0.1:5000/api/caesar/encrypt"
+        key_text = self.ui.txt_key.toPlainText().strip()
+
+        # Validate key: must be an integer between 0 and 25
+        if not key_text:
+            QMessageBox.warning(self, "Invalid key", "Key is required and must be an integer between 0 and 25.")
+            return
+
+        try:
+            key = int(key_text)
+        except ValueError:
+            QMessageBox.warning(self, "Invalid key", "Key must be an integer between 0 and 25.")
+            return
+
+        if key < 0 or key > 25:
+            QMessageBox.warning(self, "Invalid key", "Key must be between 0 and 25.")
+            return
+
         payload = {
             "plain_text": self.ui.txt_plain_text.toPlainText(),
-            "key": self.ui.txt_key.toPlainText()  # Nếu txt_key là QTextEdit
+            "key": key
         }
         try:
             response = requests.post(url, json=payload)
@@ -40,9 +57,26 @@ class MyApp(QMainWindow):
 
     def call_api_decrypt(self):
         url = "http://127.0.0.1:5000/api/caesar/decrypt"
+        key_text = self.ui.txt_key.toPlainText().strip()
+
+        # Validate key: must be an integer between 0 and 25
+        if not key_text:
+            QMessageBox.warning(self, "Invalid key", "Key is required and must be an integer between 0 and 25.")
+            return
+
+        try:
+            key = int(key_text)
+        except ValueError:
+            QMessageBox.warning(self, "Invalid key", "Key must be an integer between 0 and 25.")
+            return
+
+        if key < 0 or key > 25:
+            QMessageBox.warning(self, "Invalid key", "Key must be between 0 and 25.")
+            return
+
         payload = {
             "cipher_text": self.ui.txt_cipher_text.toPlainText(),
-            "key": self.ui.txt_key.toPlainText()  # Nếu txt_key là QTextEdit
+            "key": key
         }
         try:
             response = requests.post(url, json=payload)

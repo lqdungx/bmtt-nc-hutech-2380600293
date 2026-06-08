@@ -1,3 +1,4 @@
+# ...existing code...
 from flask import Flask, render_template, request, jsonify
 from cipher.caesar import CaesarCipher
 from cipher.vigenere import VigenereCipher
@@ -17,7 +18,9 @@ def caesar():
 @app.route("/caesar/encrypt", methods=['POST'])
 def caesar_encrypt():
     text = request.form['inputPlainText']
-    key = int(request.form['inputKeyPlain'])
+    key_raw = request.form['inputKeyPlain']
+    # client-side UI handles validation; accept raw input here
+    key = int(key_raw) if key_raw is not None and key_raw != '' else None
     caesar = CaesarCipher()
     encrypted_text = caesar.encrypt_text(text, key)
     return f"text: {text}<br>key: {key}<br>encrypted text: {encrypted_text}"
@@ -25,7 +28,8 @@ def caesar_encrypt():
 @app.route("/caesar/decrypt", methods=['POST'])
 def caesar_decrypt():
     text = request.form['inputCipherText']
-    key = int(request.form['inputKeyCipher'])
+    key_raw = request.form['inputKeyCipher']
+    key = int(key_raw) if key_raw is not None and key_raw != '' else None
     caesar = CaesarCipher()
     decrypted_text = caesar.decrypt_text(text, key)
     return f"text: {text}<br>key: {key}<br>decrypted text: {decrypted_text}"
@@ -39,6 +43,7 @@ def vigenere():
 def vigenere_encrypt():
     text = request.form['inputPlainText']
     key = request.form['inputKeyPlain']
+    # UI validates key; accept as-is
     vigenere = VigenereCipher()
     encrypted_text = vigenere.encrypt_text(text, key)
     return f"text: {text}<br>key: {key}<br>encrypted text: {encrypted_text}"
@@ -47,6 +52,7 @@ def vigenere_encrypt():
 def vigenere_decrypt():
     text = request.form['inputCipherText']
     key = request.form['inputKeyCipher']
+    # UI validates key; accept as-is
     vigenere = VigenereCipher()
     decrypted_text = vigenere.decrypt_text(text, key)
     return f"text: {text}<br>key: {key}<br>decrypted text: {decrypted_text}"
@@ -59,6 +65,7 @@ def playfair():
 def playfair_creatematrix():
         data = request.json  
         key = data.get('key', '') 
+        # UI validates key; accept as-is
         playfair_cipher = PlayFairCipher()
         playfair_matrix = playfair_cipher.create_playfair_matrix(key) 
         return jsonify({"playfair_matrix": playfair_matrix})
@@ -67,6 +74,7 @@ def playfair_creatematrix():
 def playfair_encrypt():
     text = request.form['inputPlainText']
     key = request.form['inputKeyPlain']
+    # UI validates key; accept as-is
     playfair_cipher = PlayFairCipher()
     playfair_matrix = playfair_cipher.create_playfair_matrix(key)
     encrypted_text = playfair_cipher.playfair_encrypt(text, playfair_matrix)
@@ -76,6 +84,7 @@ def playfair_encrypt():
 def playfair_decrypt():
     text = request.form['inputCipherText']
     key = request.form['inputKeyCipher']
+    # UI validates key; accept as-is
     playfair_cipher = PlayFairCipher()
     playfair_matrix = playfair_cipher.create_playfair_matrix(key)
     decrypted_text = playfair_cipher.playfair_decrypt(text, playfair_matrix)
@@ -89,7 +98,9 @@ def railfence():
 @app.route("/railfence/encrypt", methods=['POST'])
 def railfence_encrypt():
     text = request.form['inputPlainText']
-    key = int(request.form['inputKeyPlain'])
+    key_raw = request.form['inputKeyPlain']
+    # UI validates key; accept raw and convert
+    key = int(key_raw) if key_raw is not None and key_raw != '' else None
     railfence = RailFenceCipher()
     encrypted_text = railfence.rail_fence_encrypt(text, key)
     return f"text: {text}<br>key: {key}<br>encrypted text: {encrypted_text}"
@@ -97,7 +108,8 @@ def railfence_encrypt():
 @app.route("/railfence/decrypt", methods=['POST'])
 def railfence_decrypt():
     text = request.form['inputCipherText']
-    key = int(request.form['inputKeyCipher'])
+    key_raw = request.form['inputKeyCipher']
+    key = int(key_raw) if key_raw is not None and key_raw != '' else None
     railfence = RailFenceCipher()
     decrypted_text = railfence.rail_fence_decrypt(text, key)
     return f"text: {text}<br>key: {key}<br>decrypted text: {decrypted_text}"
@@ -105,3 +117,4 @@ def railfence_decrypt():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050, debug=True)
+# ...existing code...

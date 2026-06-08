@@ -16,9 +16,20 @@ class MyApp(QMainWindow):
     def call_api_encrypt(self):
         url = "http://127.0.0.1:5000/api/vigenere/encrypt"
 
+        key_text = self.ui.txt_key.toPlainText().strip()
+
+        # Validate key: must be non-empty and alphabetic
+        if not key_text:
+            QMessageBox.warning(self, "Invalid key", "Key is required and must contain only letters.")
+            return
+
+        if not key_text.isalpha():
+            QMessageBox.warning(self, "Invalid key", "Key must contain only alphabetic characters (A-Z).")
+            return
+
         payload = {
             "plain_text": self.ui.txt_plain_text.toPlainText(),
-            "key": self.ui.txt_key.toPlainText()
+            "key": key_text
         }
 
         try:
@@ -58,9 +69,20 @@ class MyApp(QMainWindow):
     def call_api_decrypt(self):
         url = "http://127.0.0.1:5000/api/vigenere/decrypt"
 
+        key_text = self.ui.txt_key.toPlainText().strip()
+
+        # Validate key: must be non-empty and alphabetic
+        if not key_text:
+            QMessageBox.warning(self, "Invalid key", "Key is required and must contain only letters.")
+            return
+
+        if not key_text.isalpha():
+            QMessageBox.warning(self, "Invalid key", "Key must contain only alphabetic characters (A-Z).")
+            return
+
         payload = {
             "cipher_text": self.ui.txt_cipher_text.toPlainText(),
-            "key": self.ui.txt_key.toPlainText()
+            "key": key_text
         }
 
         try:

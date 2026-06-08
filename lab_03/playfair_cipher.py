@@ -37,7 +37,22 @@ class MyApp(QMainWindow):
 
     def call_api_encrypt(self):
         url = "http://127.0.0.1:5000/api/playfair/encrypt"
+
         key_value = self.ui.txt_key.toPlainText().strip()
+
+        # Validate key: non-empty and must contain at least one alphabetical character
+        if not key_value:
+            QMessageBox.warning(self, "Invalid key", "Key is required for Playfair cipher and must contain letters.")
+            return
+
+        # Normalize and check letters
+        normalized = ''.join([c.upper() for c in key_value if c.isalpha()])
+        if not normalized:
+            QMessageBox.warning(self, "Invalid key", "Key must contain alphabetic characters (A-Z).")
+            return
+
+        # Replace J with I (standard Playfair handling)
+        normalized = normalized.replace('J', 'I')
 
         payload = {
             "plain_text": self.ui.txt_plain_text.toPlainText(),
@@ -74,7 +89,19 @@ class MyApp(QMainWindow):
 
     def call_api_decrypt(self):
         url = "http://127.0.0.1:5000/api/playfair/decrypt"
+
         key_value = self.ui.txt_key.toPlainText().strip()
+
+        if not key_value:
+            QMessageBox.warning(self, "Invalid key", "Key is required for Playfair cipher and must contain letters.")
+            return
+
+        normalized = ''.join([c.upper() for c in key_value if c.isalpha()])
+        if not normalized:
+            QMessageBox.warning(self, "Invalid key", "Key must contain alphabetic characters (A-Z).")
+            return
+
+        normalized = normalized.replace('J', 'I')
 
         payload = {
             "cipher_text": self.ui.txt_cipher_text.toPlainText(),
